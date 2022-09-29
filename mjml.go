@@ -52,7 +52,7 @@ func init() {
 		panic(fmt.Sprintf("Error registering host functions: %s", err))
 	}
 
-	compiled, err = runtime.CompileModule(ctx, decompressed, wazero.NewCompileConfig())
+	compiled, err = runtime.CompileModule(ctx, decompressed)
 
 	if err != nil {
 		panic(fmt.Sprintf("Error compiling wasm module: %s", err))
@@ -216,7 +216,7 @@ func ToHTML(ctx context.Context, mjml string, toHTMLOptions ...ToHTMLOption) (st
 
 func registerHostFunctions(ctx context.Context, r wazero.Runtime) error {
 
-	_, err := r.NewModuleBuilder("env").
+	_, err := r.NewHostModuleBuilder("env").
 		ExportFunction("return_result", func(ctx context.Context, m api.Module, ptr uint32, len uint32, ident uint32) {
 			if ch, ok := results.Load(int32(ident)); ok {
 
